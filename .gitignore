@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# SQLite database + migration artifacts (generated, not source)
+database/*.db
+database/*.db-journal
+database/*.db-wal
+database/*.db-shm
+
+# Logs
+npm-debug.log*
+*.log
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
