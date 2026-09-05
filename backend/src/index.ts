@@ -4,6 +4,9 @@ import { env } from "./config/env";
 import { healthRouter } from "./routes/health";
 import { authRouter } from "./routes/auth";
 import { profileRouter } from "./routes/profile";
+import { educationRouter } from "./routes/education";
+import { credentialsRouter } from "./routes/credentials";
+import { documentsRouter } from "./routes/documents";
 
 const app = express();
 
@@ -13,6 +16,9 @@ app.use(express.json());
 app.use("/api", healthRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/profile", profileRouter);
+app.use("/api/education", educationRouter);
+app.use("/api/credentials", credentialsRouter);
+app.use("/api/documents", documentsRouter);
 
 app.listen(env.PORT, () => {
   // eslint-disable-next-line no-console

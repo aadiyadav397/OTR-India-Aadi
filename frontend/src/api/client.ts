@@ -124,3 +124,127 @@ export async function updateProfile(
     body: JSON.stringify(input),
   });
 }
+
+// ---------------------------------------------------------------------
+// Milestone 3: reusable education, credentials, and document metadata.
+// These are OTR records tied to the user only, not to any government
+// application.
+// ---------------------------------------------------------------------
+
+export const RECORD_STATUSES = [
+  "USER_PROVIDED",
+  "PENDING_VERIFICATION",
+  "VERIFIED",
+  "REJECTED",
+  "EXPIRED",
+  "REVOKED",
+] as const;
+
+export type RecordStatus = (typeof RECORD_STATUSES)[number];
+
+export interface EducationRecord {
+  id: number;
+  institution: string;
+  degreeOrQualification: string;
+  fieldOfStudy: string;
+  startYear: number;
+  endYear: number | null;
+  status: RecordStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type EducationInput = Omit<EducationRecord, "id" | "createdAt" | "updatedAt">;
+
+export async function listEducation(token: string): Promise<{ education: EducationRecord[] }> {
+  return request("/api/education", { token });
+}
+export async function createEducation(
+  token: string,
+  input: EducationInput
+): Promise<{ education: EducationRecord }> {
+  return request("/api/education", { method: "POST", token, body: JSON.stringify(input) });
+}
+export async function updateEducation(
+  token: string,
+  id: number,
+  input: Partial<EducationInput>
+): Promise<{ education: EducationRecord }> {
+  return request(`/api/education/${id}`, { method: "PATCH", token, body: JSON.stringify(input) });
+}
+export async function deleteEducation(token: string, id: number): Promise<void> {
+  await request(`/api/education/${id}`, { method: "DELETE", token });
+}
+
+export interface CredentialRecord {
+  id: number;
+  title: string;
+  type: string;
+  issuer: string;
+  credentialId: string | null;
+  issueDate: string;
+  expiryDate: string | null;
+  status: RecordStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CredentialInput = Omit<CredentialRecord, "id" | "createdAt" | "updatedAt">;
+
+export async function listCredentials(token: string): Promise<{ credentials: CredentialRecord[] }> {
+  return request("/api/credentials", { token });
+}
+export async function createCredential(
+  token: string,
+  input: CredentialInput
+): Promise<{ credential: CredentialRecord }> {
+  return request("/api/credentials", { method: "POST", token, body: JSON.stringify(input) });
+}
+export async function updateCredential(
+  token: string,
+  id: number,
+  input: Partial<CredentialInput>
+): Promise<{ credential: CredentialRecord }> {
+  return request(`/api/credentials/${id}`, { method: "PATCH", token, body: JSON.stringify(input) });
+}
+export async function deleteCredential(token: string, id: number): Promise<void> {
+  await request(`/api/credentials/${id}`, { method: "DELETE", token });
+}
+
+export interface DocumentRecord {
+  id: number;
+  documentType: string;
+  documentName: string;
+  fileName: string | null;
+  fileReference: string | null;
+  mimeType: string | null;
+  fileSize: number | null;
+  verificationStatus: RecordStatus;
+  uploadedAt: string;
+  updatedAt: string;
+}
+
+export type DocumentInput = Omit<
+  DocumentRecord,
+  "id" | "verificationStatus" | "uploadedAt" | "updatedAt"
+>;
+
+export async function listDocuments(token: string): Promise<{ documents: DocumentRecord[] }> {
+  return request("/api/documents", { token });
+}
+export async function createDocument(
+  token: string,
+  input: DocumentInput
+): Promise<{ document: DocumentRecord }> {
+  return request("/api/documents", { method: "POST", token, body: JSON.stringify(input) });
+}
+export async function updateDocument(
+  token: string,
+  id: number,
+  input: Partial<DocumentInput> & { verificationStatus?: RecordStatus }
+): Promise<{ document: DocumentRecord }> {
+  return request(`/api/documents/${id}`, { method: "PATCH", token, body: JSON.stringify(input) });
+}
+export async function deleteDocument(token: string, id: number): Promise<void> {
+  await request(`/api/documents/${id}`, { method: "DELETE", token });
+}

@@ -3,6 +3,9 @@ import type { FormEvent } from "react";
 import { getProfile, updateProfile, ApiError, type OtrProfile } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import { useRouter } from "../router";
+import { EducationSection } from "../components/EducationSection";
+import { CredentialsSection } from "../components/CredentialsSection";
+import { DocumentsSection } from "../components/DocumentsSection";
 
 type LoadState =
   | { kind: "loading" }
@@ -159,6 +162,14 @@ export function Profile() {
             </button>
           </div>
         </form>
+      )}
+
+      {state.kind === "success" && token && (
+        <>
+          <EducationSection token={token} />
+          <CredentialsSection token={token} />
+          <DocumentsSection token={token} />
+        </>
       )}
     </div>
   );

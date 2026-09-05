@@ -145,3 +145,195 @@ export function validateProfileUpdateInput(body: unknown): {
 
   return { valid: true, errors: [], data };
 }
+
+// ---------------------------------------------------------------------
+// Milestone 3: education, credentials, documents (reusable OTR records)
+// ---------------------------------------------------------------------
+
+import { isValidRecordStatus, DEFAULT_RECORD_STATUS, type RecordStatus } from "./recordStatus";
+
+const MIN_YEAR = 1900;
+const MAX_YEAR = new Date().getFullYear() + 1;
+
+function isValidYear(value: unknown): value is number {
+  return (
+    typeof value === "number" &&
+    Number.isInteger(value) &&
+    value >= MIN_YEAR &&
+    value <= MAX_YEAR
+  );
+}
+
+function isValidIsoDate(value: unknown): value is string {
+  return DATE_PATTERN.test(String(value)) && !Number.isNaN(new Date(String(value)).getTime());
+}
+
+export interface EducationInput {
+  institution: string;
+  degreeOrQualification: string;
+  fieldOfStudy: string;
+  startYear: number;
+  endYear: number | null;
+  status: RecordStatus;
+}
+
+export function validateEducationInput(
+  body: unknown,
+  { partial }: { partial: boolean }
+): { valid: boolean; errors: string[]; data?: Partial<EducationInput> } {
+  const errors: string[] = [];
+  const b = (body ?? {}) as Record<string, unknown>;
+  const data: Partial<EducationInput> = {};
+
+  const has = (key: string) => Object.prototype.hasOwnProperty.call(b, key);
+
+  if (!partial || has("institution")) {
+    if (!isNonEmptyString(b.institution)) errors.push("Institution is required.");
+    else data.institution = (b.institution as string).trim();
+  }
+  if (!partial || has("degreeOrQualification")) {
+    if (!isNonEmptyString(b.degreeOrQualification)) {
+      errors.push("Degree or qualification is required.");
+    } else data.degreeOrQualification = (b.degreeOrQualification as string).trim();
+  }
+  if (!partial || has("fieldOfStudy")) {
+    if (!isNonEmptyString(b.fieldOfStudy)) errors.push("Field of study is required.");
+    else data.fieldOfStudy = (b.fieldOfStudy as string).trim();
+  }
+  if (!partial || has("startYear")) {
+    if (!isValidYear(b.startYear)) errors.push(`Start year must be between ${MIN_YEAR} and ${MAX_YEAR}.`);
+    else data.startYear = b.startYear as number;
+  }
+  if (has("endYear")) {
+    if (b.endYear !== null && !isValidYear(b.endYear)) {
+      errors.push(`End year must be null or between ${MIN_YEAR} and ${MAX_YEAR}.`);
+    } else {
+      data.endYear = (b.endYear as number | null) ?? null;
+    }
+  }
+  if (has("status")) {
+    if (!isValidRecordStatus(b.status)) errors.push("Status is not a recognized value.");
+    else data.status = b.status;
+  } else if (!partial) {
+    data.status = DEFAULT_RECORD_STATUS;
+  }
+
+  if (errors.length > 0) return { valid: false, errors };
+  return { valid: true, errors: [], data };
+}
+
+export interface CredentialInput {
+  title: string;
+  type: string;
+  issuer: string;
+  credentialId: string | null;
+  issueDate: string;
+  expiryDate: string | null;
+  status: RecordStatus;
+}
+
+export function validateCredentialInput(
+  body: unknown,
+  { partial }: { partial: boolean }
+): { valid: boolean; errors: string[]; data?: Partial<CredentialInput> } {
+  const errors: string[] = [];
+  const b = (body ?? {}) as Record<string, unknown>;
+  const data: Partial<CredentialInput> = {};
+
+  const has = (key: string) => Object.prototype.hasOwnProperty.call(b, key);
+
+  if (!partial || has("title")) {
+    if (!isNonEmptyString(b.title)) errors.push("Title is required.");
+    else data.title = (b.title as string).trim();
+  }
+  if (!partial || has("type")) {
+    if (!isNonEmptyString(b.type)) errors.push("Type is required.");
+    else data.type = (b.type as string).trim();
+  }
+  if (!partial || has("issuer")) {
+    if (!isNonEmptyString(b.issuer)) errors.push("Issuer is required.");
+    else data.issuer = (b.issuer as string).trim();
+  }
+  if (has("credentialId")) {
+    data.credentialId = b.credentialId === null ? null : String(b.credentialId).trim();
+  }
+  if (!partial || has("issueDate")) {
+    if (!isValidIsoDate(b.issueDate)) errors.push("Issue date must be a valid date in YYYY-MM-DD format.");
+    else data.issueDate = b.issueDate as string;
+  }
+  if (has("expiryDate")) {
+    if (b.expiryDate !== null && !isValidIsoDate(b.expiryDate)) {
+      errors.push("Expiry date must be null or a valid date in YYYY-MM-DD format.");
+    } else {
+      data.expiryDate = (b.expiryDate as string | null) ?? null;
+    }
+  }
+  if (has("status")) {
+    if (!isValidRecordStatus(b.status)) errors.push("Status is not a recognized value.");
+    else data.status = b.status;
+  } else if (!partial) {
+    data.status = DEFAULT_RECORD_STATUS;
+  }
+
+  if (errors.length > 0) return { valid: false, errors };
+  return { valid: true, errors: [], data };
+}
+
+export interface DocumentInput {
+  documentType: string;
+  documentName: string;
+  fileName: string | null;
+  fileReference: string | null;
+  mimeType: string | null;
+  fileSize: number | null;
+  verificationStatus: RecordStatus;
+}
+
+export function validateDocumentInput(
+  body: unknown,
+  { partial }: { partial: boolean }
+): { valid: boolean; errors: string[]; data?: Partial<DocumentInput> } {
+  const errors: string[] = [];
+  const b = (body ?? {}) as Record<string, unknown>;
+  const data: Partial<DocumentInput> = {};
+
+  const has = (key: string) => Object.prototype.hasOwnProperty.call(b, key);
+
+  if (!partial || has("documentType")) {
+    if (!isNonEmptyString(b.documentType)) errors.push("Document type is required.");
+    else data.documentType = (b.documentType as string).trim();
+  }
+  if (!partial || has("documentName")) {
+    if (!isNonEmptyString(b.documentName)) errors.push("Document name is required.");
+    else data.documentName = (b.documentName as string).trim();
+  }
+  if (has("fileName")) {
+    data.fileName = b.fileName === null ? null : String(b.fileName).trim();
+  }
+  if (has("fileReference")) {
+    data.fileReference = b.fileReference === null ? null : String(b.fileReference).trim();
+  }
+  if (has("mimeType")) {
+    data.mimeType = b.mimeType === null ? null : String(b.mimeType).trim();
+  }
+  if (has("fileSize")) {
+    if (b.fileSize !== null && !(typeof b.fileSize === "number" && b.fileSize >= 0)) {
+      errors.push("File size must be null or a non-negative number.");
+    } else {
+      data.fileSize = (b.fileSize as number | null) ?? null;
+    }
+  }
+  // verificationStatus is intentionally NOT settable on create - every
+  // new document always defaults to USER_PROVIDED regardless of what
+  // the client sends. It can only be changed afterwards via PATCH.
+  if (!partial) {
+    data.verificationStatus = DEFAULT_RECORD_STATUS;
+  } else if (has("verificationStatus")) {
+    if (!isValidRecordStatus(b.verificationStatus)) {
+      errors.push("Verification status is not a recognized value.");
+    } else data.verificationStatus = b.verificationStatus;
+  }
+
+  if (errors.length > 0) return { valid: false, errors };
+  return { valid: true, errors: [], data };
+}

@@ -32,8 +32,24 @@ wiring and a health-check endpoint.
 - Minimal Register / Login / Profile screens in the frontend, with a
   logout action and route protection on `/profile`
 
-Features such as OTP, education, credentials, documents, consent,
-government portal integration, applications, dashboards, and audit logs
+**Milestone 3 (Reusable Education, Credentials, Document Metadata):**
+complete — this adds:
+
+- Reusable `education`, `credentials`, and `documents` records tied to
+  a user (not to any government application, portal, or consent flow)
+- Full CRUD via `/api/education`, `/api/credentials`, `/api/documents`
+  (all authenticated, all scoped to the requesting user only)
+- A shared prototype "verification lifecycle" status (`USER_PROVIDED`,
+  `PENDING_VERIFICATION`, `VERIFIED`, `REJECTED`, `EXPIRED`, `REVOKED`)
+  used across all three record types — a demo concept only, **not**
+  real government or issuer verification
+- Documents are **metadata/reference only** — no real file upload or
+  storage exists anywhere in this codebase
+- Profile page extended with Education, Credentials, and Documents
+  sections (list / add / edit / delete)
+
+Features such as OTP, consent, government portal integration,
+interoperability mapping, applications, dashboards, and audit logs
 are **not yet implemented** — they belong to later milestones.
 
 ## Architecture

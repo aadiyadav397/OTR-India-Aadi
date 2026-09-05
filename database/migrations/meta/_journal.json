@@ -8,6 +8,13 @@
       "when": 1788568031054,
       "tag": "0000_ancient_lockjaw",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1788569610827,
+      "tag": "0001_black_otto_octavius",
+      "breakpoints": true
     }
   ]
 }
