@@ -14,11 +14,25 @@ government application portals.
 
 ## Milestone Status
 
-**Current milestone: Project Foundation.**
+**Milestone 1 (Project Foundation):** complete — frontend/backend/database
+wiring and a health-check endpoint.
 
-This milestone sets up the frontend, backend, database wiring, and a
-health-check endpoint only. Features such as authentication, OTP, OTR ID
-generation, profile/education/credential/document management, consent,
+**Milestone 2 (Registration, Login, OTR Profile):** complete — this adds:
+
+- User registration with email + password (bcrypt-hashed, never stored
+  or returned in plaintext)
+- Login returning a prototype JWT session token
+- OTR ID generation — an 8-character random demo identifier
+  (`OTR-XXXXXXXX`) generated from cryptographically random data only,
+  **not** derived from email, phone, date of birth, or any government
+  identifier
+- A basic citizen profile (full name, date of birth, mobile number)
+  linked 1:1 to a user
+- Authenticated `GET /api/profile` and `PATCH /api/profile`
+- Minimal Register / Login / Profile screens in the frontend, with a
+  logout action and route protection on `/profile`
+
+Features such as OTP, education, credentials, documents, consent,
 government portal integration, applications, dashboards, and audit logs
 are **not yet implemented** — they belong to later milestones.
 
@@ -119,7 +133,12 @@ health endpoint on load to confirm connectivity.
 PORT=4000
 DATABASE_URL=../database/otr.db
 FRONTEND_ORIGIN=http://localhost:5173
+JWT_SECRET=otr-india-demo-secret-change-me
+JWT_EXPIRES_IN=7d
 ```
+
+`JWT_SECRET` is required — the server will refuse to start without it.
+The value shipped in `.env.example` is a demo placeholder only.
 
 **`frontend/.env`** (see `frontend/.env.example`)
 
