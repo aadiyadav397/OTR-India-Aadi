@@ -21,6 +21,7 @@ export function Profile() {
   const [fullName, setFullName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
+  const [address, setAddress] = useState("");
   const [saveErrors, setSaveErrors] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -35,6 +36,7 @@ export function Profile() {
         setFullName(profile.fullName);
         setDateOfBirth(profile.dateOfBirth);
         setMobileNumber(profile.mobileNumber);
+        setAddress(profile.address ?? "");
       })
       .catch((err: unknown) => {
         if (cancelled) return;
@@ -56,7 +58,12 @@ export function Profile() {
     setSaveErrors([]);
     setIsSaving(true);
     try {
-      const { profile } = await updateProfile(token, { fullName, dateOfBirth, mobileNumber });
+      const { profile } = await updateProfile(token, {
+        fullName,
+        dateOfBirth,
+        mobileNumber,
+        address: address.trim() === "" ? null : address,
+      });
       setState({ kind: "success", profile });
       setIsEditing(false);
     } catch (err) {
@@ -79,9 +86,17 @@ export function Profile() {
     <div style={{ fontFamily: "sans-serif", padding: "2rem", maxWidth: 480, margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1>OTR Profile</h1>
-        <button onClick={handleLogout} style={{ cursor: "pointer" }}>
-          Log Out
-        </button>
+        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+          <a href="/services" onClick={(e) => { e.preventDefault(); navigate("/services"); }}>
+            Government Services
+          </a>
+          <a href="/applications" onClick={(e) => { e.preventDefault(); navigate("/applications"); }}>
+            My Applications
+          </a>
+          <button onClick={handleLogout} style={{ cursor: "pointer" }}>
+            Log Out
+          </button>
+        </div>
       </div>
 
       <p
@@ -107,6 +122,7 @@ export function Profile() {
           <Field label="Full Name" value={state.profile.fullName} />
           <Field label="Date of Birth" value={state.profile.dateOfBirth} />
           <Field label="Mobile Number" value={state.profile.mobileNumber} />
+          <Field label="Address" value={state.profile.address ?? "(not set)"} />
           <Field label="Email" value={state.profile.email} />
 
           <button onClick={() => setIsEditing(true)} style={{ marginTop: "0.75rem", cursor: "pointer" }}>
@@ -141,6 +157,16 @@ export function Profile() {
               type="tel"
               value={mobileNumber}
               onChange={(e) => setMobileNumber(e.target.value)}
+              style={inputStyle}
+            />
+          </label>
+          <label>
+            Address
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="e.g. 221B Model Town, Delhi"
               style={inputStyle}
             />
           </label>

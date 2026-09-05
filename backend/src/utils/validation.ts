@@ -105,6 +105,7 @@ export interface ProfileUpdateInput {
   fullName?: string;
   dateOfBirth?: string;
   mobileNumber?: string;
+  address?: string | null;
 }
 
 /**
@@ -136,9 +137,14 @@ export function validateProfileUpdateInput(body: unknown): {
       errors.push("Mobile number must be exactly 10 digits.");
     } else data.mobileNumber = (b.mobileNumber as string).trim();
   }
+  if (b.address !== undefined) {
+    if (b.address !== null && !isNonEmptyString(b.address)) {
+      errors.push("Address must be null or a non-empty string.");
+    } else data.address = b.address === null ? null : (b.address as string).trim();
+  }
 
   if (Object.keys(data).length === 0 && errors.length === 0) {
-    errors.push("At least one field (fullName, dateOfBirth, mobileNumber) must be provided.");
+    errors.push("At least one field (fullName, dateOfBirth, mobileNumber, address) must be provided.");
   }
 
   if (errors.length > 0) return { valid: false, errors };
@@ -336,4 +342,63 @@ export function validateDocumentInput(
 
   if (errors.length > 0) return { valid: false, errors };
   return { valid: true, errors: [], data };
+}
+
+// ---------------------------------------------------------------------
+// Milestone 4: portals, consent, applications
+// ---------------------------------------------------------------------
+
+function isPositiveInteger(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value > 0;
+}
+
+export interface PortalIdInput {
+  portalId: number;
+}
+
+/**
+ * Shared validator for any endpoint that only needs a portalId in the
+ * body: POST /api/consents and POST /api/applications/preview.
+ */
+export function validatePortalIdInput(
+  body: unknown
+): { valid: boolean; errors: string[]; data?: PortalIdInput } {
+  const errors: string[] = [];
+  const b = (body ?? {}) as Record<string, unknown>;
+
+  if (!isPositiveInteger(b.portalId)) errors.push("A valid portalId is required.");
+
+  if (errors.length > 0) return { valid: false, errors };
+  return { valid: true, errors: [], data: { portalId: b.portalId as number } };
+}
+
+export interface ApplicationSubmitInput {
+  portalId: number;
+  applicationData: Record<string, unknown>;
+}
+
+export function validateApplicationSubmitInput(
+  body: unknown
+): { valid: boolean; errors: string[]; data?: ApplicationSubmitInput } {
+  const errors: string[] = [];
+  const b = (body ?? {}) as Record<string, unknown>;
+
+  if (!isPositiveInteger(b.portalId)) errors.push("A valid portalId is required.");
+
+  const isPlainObject =
+    typeof b.applicationData === "object" &&
+    b.applicationData !== null &&
+    !Array.isArray(b.applicationData);
+  if (!isPlainObject) errors.push("applicationData must be an object.");
+
+  if (errors.length > 0) return { valid: false, errors };
+
+  return {
+    valid: true,
+    errors: [],
+    data: {
+      portalId: b.portalId as number,
+      applicationData: b.applicationData as Record<string, unknown>,
+    },
+  };
 }

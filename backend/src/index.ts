@@ -7,6 +7,12 @@ import { profileRouter } from "./routes/profile";
 import { educationRouter } from "./routes/education";
 import { credentialsRouter } from "./routes/credentials";
 import { documentsRouter } from "./routes/documents";
+import { portalsRouter } from "./routes/portals";
+import { consentsRouter } from "./routes/consents";
+import { applicationsRouter } from "./routes/applications";
+import { seedPortalsAndMappings } from "./db/seed";
+
+seedPortalsAndMappings();
 
 const app = express();
 
@@ -19,6 +25,9 @@ app.use("/api/profile", profileRouter);
 app.use("/api/education", educationRouter);
 app.use("/api/credentials", credentialsRouter);
 app.use("/api/documents", documentsRouter);
+app.use("/api/portals", portalsRouter);
+app.use("/api/consents", consentsRouter);
+app.use("/api/applications", applicationsRouter);
 
 app.listen(env.PORT, () => {
   // eslint-disable-next-line no-console

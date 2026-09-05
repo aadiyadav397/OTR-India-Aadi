@@ -19,6 +19,7 @@ export interface OtrProfile {
   fullName: string;
   dateOfBirth: string;
   mobileNumber: string;
+  address: string | null;
   email: string;
   createdAt: string;
   updatedAt: string;
@@ -41,6 +42,7 @@ export interface ProfileUpdateInput {
   fullName?: string;
   dateOfBirth?: string;
   mobileNumber?: string;
+  address?: string | null;
 }
 
 export class ApiError extends Error {
@@ -247,4 +249,103 @@ export async function updateDocument(
 }
 export async function deleteDocument(token: string, id: number): Promise<void> {
   await request(`/api/documents/${id}`, { method: "DELETE", token });
+}
+
+// ---------------------------------------------------------------------
+// Milestone 4: mock government portals, consent, and applications.
+// Demonstrates the SAME reusable OTR data mapped into DIFFERENT
+// portal-specific field names, only after explicit user consent.
+// Fictional demo portals only - no real government integration.
+// ---------------------------------------------------------------------
+
+export interface Portal {
+  id: number;
+  name: string;
+  code: string;
+  description: string;
+  active: boolean;
+  createdAt: string;
+}
+
+export async function listPortals(token: string): Promise<{ portals: Portal[] }> {
+  return request("/api/portals", { token });
+}
+
+export type ConsentStatus = "GRANTED" | "REVOKED";
+
+export interface Consent {
+  id: number;
+  userId: number;
+  portalId: number;
+  status: ConsentStatus;
+  grantedAt: string;
+  revokedAt: string | null;
+  createdAt: string;
+}
+
+export async function listConsents(token: string): Promise<{ consents: Consent[] }> {
+  return request("/api/consents", { token });
+}
+
+export async function grantConsent(token: string, portalId: number): Promise<{ consent: Consent }> {
+  return request("/api/consents", { method: "POST", token, body: JSON.stringify({ portalId }) });
+}
+
+export async function revokeConsent(token: string, consentId: number): Promise<{ consent: Consent }> {
+  return request(`/api/consents/${consentId}/revoke`, { method: "POST", token });
+}
+
+export interface ApplicationPreview {
+  portal: { id: number; name: string; code: string };
+  consentId: number;
+  prefilled: Record<string, unknown>;
+}
+
+export async function previewApplication(
+  token: string,
+  portalId: number
+): Promise<ApplicationPreview> {
+  return request("/api/applications/preview", {
+    method: "POST",
+    token,
+    body: JSON.stringify({ portalId }),
+  });
+}
+
+export type ApplicationStatus = "DRAFT" | "SUBMITTED";
+
+export interface Application {
+  id: number;
+  userId: number;
+  portalId: number;
+  consentId: number;
+  applicationNumber: string;
+  status: ApplicationStatus;
+  applicationData: Record<string, unknown>;
+  submittedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function submitApplication(
+  token: string,
+  portalId: number,
+  applicationData: Record<string, unknown>
+): Promise<{ application: Application }> {
+  return request("/api/applications", {
+    method: "POST",
+    token,
+    body: JSON.stringify({ portalId, applicationData }),
+  });
+}
+
+export async function listApplications(token: string): Promise<{ applications: Application[] }> {
+  return request("/api/applications", { token });
+}
+
+export async function getApplication(
+  token: string,
+  id: number
+): Promise<{ application: Application }> {
+  return request(`/api/applications/${id}`, { token });
 }

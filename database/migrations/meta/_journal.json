@@ -15,6 +15,13 @@
       "when": 1788569610827,
       "tag": "0001_black_otto_octavius",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1788588621916,
+      "tag": "0002_zippy_hercules",
+      "breakpoints": true
     }
   ]
 }

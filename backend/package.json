@@ -10,7 +10,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "tsx src/db/migrate.ts"
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:seed": "tsx -e \"import('./src/db/seed').then(m => m.seedPortalsAndMappings())\""
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

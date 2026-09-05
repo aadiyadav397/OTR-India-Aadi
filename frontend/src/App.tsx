@@ -4,6 +4,8 @@ import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Profile } from "./pages/Profile";
 import { HealthCheck } from "./pages/HealthCheck";
+import { GovernmentServices } from "./pages/GovernmentServices";
+import { Applications } from "./pages/Applications";
 
 function Screen() {
   const { path, navigate } = useRouter();
@@ -25,8 +27,24 @@ function Screen() {
     return <Profile />;
   }
 
+  if (path === "/services") {
+    if (!token) {
+      navigate("/login");
+      return null;
+    }
+    return <GovernmentServices />;
+  }
+
+  if (path === "/applications") {
+    if (!token) {
+      navigate("/login");
+      return null;
+    }
+    return <Applications />;
+  }
+
   // Default landing route: the Milestone 1 health check, plus quick links
-  // into the new Milestone 2 auth screens.
+  // into the auth and government services screens.
   return (
     <div>
       <HealthCheck />
@@ -43,6 +61,10 @@ function Screen() {
           {" · "}
           <a href="/profile" onClick={(e) => { e.preventDefault(); navigate("/profile"); }}>
             My Profile
+          </a>
+          {" · "}
+          <a href="/services" onClick={(e) => { e.preventDefault(); navigate("/services"); }}>
+            Government Services
           </a>
         </p>
       </div>

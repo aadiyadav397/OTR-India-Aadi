@@ -48,9 +48,45 @@ complete — this adds:
 - Profile page extended with Education, Credentials, and Documents
   sections (list / add / edit / delete)
 
-Features such as OTP, consent, government portal integration,
-interoperability mapping, applications, dashboards, and audit logs
-are **not yet implemented** — they belong to later milestones.
+**Milestone 4 (Consent + Interoperability + Mock Portals + Applications):**
+complete — this is the core SIH demonstration. It adds:
+
+- Two fictional mock government portals, seeded automatically on
+  server startup: **Scholarship Application Portal** and **Employment
+  Application Portal**
+- A data-driven `portal_field_mappings` table: the same canonical OTR
+  fields (`fullName`, `dateOfBirth`, `mobileNumber`, `email`,
+  `address`, `educationRecords`, `credentials`) are mapped to
+  intentionally different field names per portal (e.g. `applicantName`
+  vs `candidateName`, `dob` vs `birthDate`) — no per-portal branching
+  logic in the route handlers
+- Explicit consent: a user must grant consent for a specific portal
+  before their OTR data can be previewed or used in an application;
+  revoking consent immediately blocks further previews/submissions for
+  that portal
+- `POST /api/applications/preview` — maps reusable OTR data into a
+  portal's field names **without** creating an application
+- `POST /api/applications` — submits an application (portal-mapped
+  fields + application-specific fields together), generates a demo
+  application number (`APP-SCH-XXXXXXXX` / `APP-EMP-XXXXXXXX`) from
+  cryptographically random data only
+- A `profiles.address` field (previously missing) so "Address" can be
+  a genuine reusable/shareable OTR category, as shown on the consent
+  screen
+- Frontend "Government Services" flow: select a portal → see a
+  consent screen listing exactly what will be shared → grant consent →
+  see OTR data prefilled under the portal's own field names, clearly
+  separated from application-specific fields → submit → application
+  number confirmation
+- "My Applications" page listing the user's own submitted applications
+
+Application-specific fields (e.g. `scholarshipType`, `jobRole`) are
+never written back into the reusable OTR profile/education/credentials
+tables — they exist only inside a specific application's stored data.
+
+Features such as DigiLocker/Aadhaar/biometric integration, OAuth,
+dashboards, and audit/access history logging are **not implemented** —
+later milestones, if any.
 
 ## Architecture
 

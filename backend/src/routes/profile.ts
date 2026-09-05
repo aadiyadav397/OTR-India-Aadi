@@ -16,6 +16,7 @@ function findProfileWithEmail(userId: number) {
       fullName: profiles.fullName,
       dateOfBirth: profiles.dateOfBirth,
       mobileNumber: profiles.mobileNumber,
+      address: profiles.address,
       createdAt: profiles.createdAt,
       updatedAt: profiles.updatedAt,
       email: users.email,
