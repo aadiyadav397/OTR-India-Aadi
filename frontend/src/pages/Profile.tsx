@@ -87,6 +87,9 @@ export function Profile() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1>OTR Profile</h1>
         <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+          <a href="/dashboard" onClick={(e) => { e.preventDefault(); navigate("/dashboard"); }}>
+            Dashboard
+          </a>
           <a href="/services" onClick={(e) => { e.preventDefault(); navigate("/services"); }}>
             Government Services
           </a>

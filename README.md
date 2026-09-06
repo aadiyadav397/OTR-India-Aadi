@@ -84,9 +84,25 @@ Application-specific fields (e.g. `scholarshipType`, `jobRole`) are
 never written back into the reusable OTR profile/education/credentials
 tables — they exist only inside a specific application's stored data.
 
-Features such as DigiLocker/Aadhaar/biometric integration, OAuth,
-dashboards, and audit/access history logging are **not implemented** —
-later milestones, if any.
+**Milestone 5, Part 1 (Dashboard UI):** complete — a new authenticated
+`/dashboard` page (frontend-only, no backend changes) that becomes the
+landing page after login/registration. It shows:
+
+- The OTR identity card (OTR ID + name), labeled as the reusable
+  One-Time Registration identity
+- A profile completion percentage + progress bar, computed entirely
+  client-side from the existing `GET /api/profile` response
+- A reusable OTR data summary (basic profile, education, credentials,
+  documents) clearly separated from...
+- ...an applications summary (total/submitted counts + recent list),
+  labeled as portal-specific submissions, not reusable OTR data
+- Quick action links into Profile, Government Services, and My
+  Applications
+
+No new backend endpoints, schema changes, or dependencies were
+introduced for this milestone - it's built entirely from existing
+`GET /api/profile`, `/api/education`, `/api/credentials`,
+`/api/documents`, `/api/applications`, and `/api/portals` responses.
 
 ## Architecture
 

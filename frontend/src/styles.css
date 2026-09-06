@@ -1,0 +1,290 @@
+/* OTR-India global styles.
+   Plain CSS only - no framework, no build-step preprocessing.
+   Keeps the existing per-page inline-style approach working; these
+   classes are additive and used for shared, cross-page consistency
+   (navigation, cards, badges, buttons, forms, layout). */
+
+:root {
+  --otr-blue: #1a4d8f;
+  --otr-blue-bg: #eef6ff;
+  --otr-blue-border: #cfe3ff;
+  --otr-green: #1e7a34;
+  --otr-green-bg: #e6f6ea;
+  --otr-gray-text: #666;
+  --otr-gray-border: #e5e5e5;
+  --otr-gray-bg: #f5f5f5;
+  --otr-ink: #1a1a1a;
+  --otr-radius: 6px;
+  --otr-max-width: 960px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--otr-ink);
+  background: #fafafa;
+}
+
+a {
+  color: var(--otr-blue);
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Layout container shared by every authenticated page */
+.otr-page {
+  max-width: var(--otr-max-width);
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .otr-page {
+    padding: 1rem;
+  }
+}
+
+/* Top navigation bar */
+.otr-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--otr-gray-border);
+}
+
+.otr-navbar h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.otr-navlinks {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.otr-navlink {
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  color: var(--otr-gray-text);
+  white-space: nowrap;
+}
+
+.otr-navlink:hover {
+  background: var(--otr-gray-bg);
+}
+
+.otr-navlink.active {
+  background: var(--otr-blue-bg);
+  color: var(--otr-blue);
+  font-weight: 600;
+}
+
+.otr-logout-btn {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--otr-gray-border);
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.otr-logout-btn:hover {
+  background: var(--otr-gray-bg);
+}
+
+/* Cards */
+.otr-card {
+  border: 1px solid var(--otr-gray-border);
+  border-radius: var(--otr-radius);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: #fff;
+}
+
+.otr-card-accent-blue {
+  background: var(--otr-blue-bg);
+  border-color: var(--otr-blue-border);
+}
+
+.otr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+/* Section labels distinguishing reusable OTR data from
+   application-specific data - used consistently across Dashboard,
+   Government Services, Applications, and Profile. */
+.otr-section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  margin-bottom: 0.5rem;
+}
+
+.otr-section-label-reusable {
+  background: var(--otr-blue-bg);
+  color: var(--otr-blue);
+}
+
+.otr-section-label-specific {
+  background: #fdf3e3;
+  color: #92650c;
+}
+
+/* Status badges/pills */
+.otr-badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.otr-badge-success {
+  background: var(--otr-green-bg);
+  color: var(--otr-green);
+}
+
+.otr-badge-neutral {
+  background: var(--otr-gray-bg);
+  color: #555;
+}
+
+.otr-badge-warning {
+  background: #fdf3e3;
+  color: #92650c;
+}
+
+.otr-pill {
+  font-size: 0.7rem;
+  background: var(--otr-gray-bg);
+  color: #444;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+/* Buttons */
+.otr-btn {
+  padding: 0.55rem 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--otr-ink);
+}
+
+.otr-btn:hover {
+  background: var(--otr-gray-bg);
+}
+
+.otr-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.otr-btn-primary {
+  background: var(--otr-blue);
+  border-color: var(--otr-blue);
+  color: #fff;
+}
+
+.otr-btn-primary:hover {
+  background: #163f75;
+}
+
+.otr-btn-danger-outline {
+  border-color: #e0a0a0;
+  color: #a33;
+}
+
+.otr-btn-danger-outline:hover {
+  background: #fdf0f0;
+}
+
+/* Forms */
+.otr-field {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.otr-input {
+  display: block;
+  width: 100%;
+  padding: 0.55rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.otr-input:focus {
+  outline: 2px solid var(--otr-blue-border);
+  border-color: var(--otr-blue);
+}
+
+/* State messages */
+.otr-loading,
+.otr-empty {
+  color: var(--otr-gray-text);
+  font-size: 0.9rem;
+  padding: 1rem 0;
+}
+
+.otr-error {
+  color: #a33;
+  background: #fdf0f0;
+  border: 1px solid #f0c8c8;
+  border-radius: var(--otr-radius);
+  padding: 0.6rem 0.85rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.otr-progress-track {
+  background: var(--otr-gray-bg);
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.otr-progress-fill {
+  height: 100%;
+}
+
+/* Prevent horizontal overflow on narrow screens */
+img,
+pre,
+table {
+  max-width: 100%;
+}
+
+pre {
+  overflow-x: auto;
+}

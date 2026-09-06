@@ -21,7 +21,7 @@ export function Login() {
     try {
       const result = await loginUser({ email, password });
       login(result.token, result.user);
-      navigate("/profile");
+      navigate("/dashboard");
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);

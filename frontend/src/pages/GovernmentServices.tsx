@@ -101,9 +101,14 @@ export function GovernmentServices() {
     <div style={{ fontFamily: "sans-serif", padding: "2rem", maxWidth: 560, margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1>Government Services</h1>
-        <a href="/profile" onClick={(e) => { e.preventDefault(); navigate("/profile"); }}>
-          Back to Profile
-        </a>
+        <div style={{ display: "flex", gap: "0.75rem" }}>
+          <a href="/dashboard" onClick={(e) => { e.preventDefault(); navigate("/dashboard"); }}>
+            Dashboard
+          </a>
+          <a href="/profile" onClick={(e) => { e.preventDefault(); navigate("/profile"); }}>
+            Back to Profile
+          </a>
+        </div>
       </div>
 
       <p style={{ color: "#666", fontSize: "0.85rem" }}>

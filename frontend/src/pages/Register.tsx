@@ -24,7 +24,7 @@ export function Register() {
     try {
       const result = await registerUser({ email, password, fullName, dateOfBirth, mobileNumber });
       login(result.token, result.user);
-      navigate("/profile");
+      navigate("/dashboard");
     } catch (err) {
       if (err instanceof ApiError) {
         setErrors(err.details && err.details.length > 0 ? err.details : [err.message]);
